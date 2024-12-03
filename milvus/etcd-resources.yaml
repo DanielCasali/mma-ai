@@ -42,8 +42,8 @@ spec:
               memory: 512Mi
       volumes:
         - name: etcd-data
-          emptyDir:
-            medium: Memory
+          persistentVolumeClaim:
+            claimName: etcd-data
   strategy:
     type: Recreate
 ---

@@ -60,5 +60,5 @@ spec:
             failureThreshold: 3
       volumes:
         - name: llama-models
-          emptyDir:
-            medium: Memory
+          persistentVolumeClaim:
+            claimName: llama-models

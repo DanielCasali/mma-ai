@@ -1,0 +1,38 @@
+# etcd-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: etcd-data
+spec:
+#  storageClassName: your-storage-class #if you do not use default storageclass
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+---
+# milvus-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: milvus-data
+spec:
+#  storageClassName: your-storage-class #if you do not use default storageclass
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
+---
+# minio-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-data
+spec:
+#  storageClassName: your-storage-class #if you do not use default storageclass
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Gi

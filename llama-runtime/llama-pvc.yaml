@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: llama-models
+spec:
+#  storageClassName: your-storage-class-name #if you do not want to use default
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi

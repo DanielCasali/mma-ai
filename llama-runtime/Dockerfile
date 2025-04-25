@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi9/ubi as builder
 ENV PATH=/opt/rh/gcc-toolset-13/root/usr/bin/:$PATH
 ENV BLA_VENDOR=OpenBLAS
 RUN dnf update -y && dnf install -y \
-  cmake git ninja-build gcc-c++  gcc-toolset-13 \
+  cmake git ninja-build gcc-c++ curl-devel gcc-toolset-13 \
   && scl enable gcc-toolset-13 bash \
   && source scl_source enable gcc-toolset-13 \
   && dnf clean all

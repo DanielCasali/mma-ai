@@ -10,7 +10,7 @@ RUN dnf update -y && dnf install -y \
   && dnf install -y https://public.dhe.ibm.com/software/server/POWER/Linux/toolchain/at/redhat/RHEL9/at17.0/advance-toolchain-at17.0-mcore-libs-17.0-2.ppc64le.rpm
 
 RUN dnf install -y curl-devel
-RUN git clone https://github.com/ggml-org/llama.cpp.git  && cd llama.cpp && sed -i "s/powerpc64le/native -mcpu=power10 -mvsx -mtune=native -D__POWER10_VECTOR__/g" ggml/src/CMakeLists.txt && \
+RUN git clone https://github.com/DanielCasali/llama.cpp.git  && cd llama.cpp && sed -i "s/powerpc64le/native -mcpu=power10 -mvsx -mtune=native -D__POWER10_VECTOR__/g" ggml/src/CMakeLists.txt && \
     mkdir build; \
     cd build; \
     cmake -DCMAKE_C_FLAGS="-mcpu=power10" -DCMAKE_CXX_FLAGS="-mcpu=power10" -G Ninja ..; \

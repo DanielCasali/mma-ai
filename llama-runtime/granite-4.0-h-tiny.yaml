@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llama-cpp-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llama-cpp-server
+  template:
+    metadata:
+      labels:
+        app: llama-cpp-server
+    spec:
+      initContainers:
+        - name: fetch-model-data
+          image: ubi8
+          volumeMounts:
+            - name: llama-models
+              mountPath: /models
+          command:
+            - sh
+            - '-c'
+            - |
+              if [ ! -f /models/granite-4.0-h-tiny-Q4_K_M.gguf ] ; then
+                curl -L https://huggingface.co/ibm-granite/granite-4.0-h-tiny-GGUF/resolve/main/granite-4.0-h-tiny-Q4_K_M.gguf --output /models/granite-4.0-h-tiny-Q4_K_M.gguf
+              else
+                echo "model /models/granite-4.0-h-tiny-Q4_K_M.gguf already present"
+              fi
+          resources: {}
+      containers:
+        - name: llama-cpp
+          image: quay.io/daniel_casali/llama.cpp-mma:v10
+          imagePullPolicy: Always
+          args: ["-m", "/models/granite-4.0-h-tiny-Q4_K_M.gguf", "--prio", "3", "-c", "4096","-b", "32", "-t", "40", "-n", "-1"]
+          ports:
+            - containerPort: 8080
+              name: http
+          volumeMounts:
+            - name: llama-models
+              mountPath: /models
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+            periodSeconds: 20
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+      volumes:
+        - name: llama-models
+          emptyDir:
+            medium: Memory
